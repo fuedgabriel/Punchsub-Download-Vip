@@ -33,6 +33,7 @@ def Login():
 def AllAnimeSolo():
     colum = 0
     cont = 0
+    cja = 0
     #CApturando vetor
     for col in f:
         col = col.split(',')
@@ -60,7 +61,40 @@ def AllAnimeSolo():
                 time.sleep(2)
                 link = 'https://punchsubs.net/'+col[Collum][10:100].replace('"','').replace('\\','')
                 driver.get(link)
+                id = driver.page_source
+                sopa = BeautifulSoup(id, 'html.parser')
+                cja+=1
+                print()
+                print()
+                print()
+                print(cja)
+                print()
+                print()
+                print()
                 break
+                img = 0
+                '''
+                test = sopa.find_all("img", class_='card-img-top rounded screen')
+
+                for clicks in test:
+                    img+=1
+                    print(clicks)
+                    
+                    driver.find_element(By.XPATH, '//*[@id="cards-episodios"]/ul[1]/li['+str(img)+']/div[1]/img').click()
+                    
+                    driver.find_element(By.XPATH, '//*[@id="nav-fullhd-tab"]').click()
+                    driver.find_element(By.XPATH, '//*[@id="mirror-vip"]').click()
+                    
+                    driver.find_element(By.XPATH, '//*[@id="nav-hd-tab"]').click()
+                    driver.find_element(By.XPATH, '//*[@id="mirror-vip"]').click()
+                    
+                    driver.find_element(By.XPATH, '//*[@id="nav-sd-tab"]').click()
+                    driver.find_element(By.XPATH, '//*[@id="mirror-vip"]').click()
+'''
+                    
+                    
+                
+
         
     
     
