@@ -6,8 +6,8 @@ import time
 import re
 import wget
 #login
-login = 'fuedgabriel'
-password = 'fuedqe2902'
+login = ''
+password = ''
 link = 'https://punchsubs.net/buscar-projeto/anime'
 
 #Contadores
