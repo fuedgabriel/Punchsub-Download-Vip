@@ -68,10 +68,10 @@ def AllAnimeSolo():
     for col in f:
         col = col.split(',')
         a = 12
-        x = '' 
+        name = '' 
 
         #nome
-        while('"' not in x):
+        while('"' not in name):
             name = col[1][11:a]
             a+=1
         print('Nome do anime: '+name)
@@ -111,12 +111,14 @@ def AllAnimeSolo():
                     episodes = 0
                     test = sopa.find_all("img", class_='card-img-top rounded screen')
             except:
-                print()
+                pass
 
                 for clicks in test:
                     episodes+=1
-                    images = clicks.split(' ')
-                    images = images[7]
+                    images = str(clicks).split(' ')
+                    images = images[7].replace('src="','').replace('"/>','')
+                    if('https://' not in images):
+                        images = 'https://punchsubs.net'+images
                     print('link das imagens dos episodeos: '+ str(images))
                     print()
                     print()
@@ -136,21 +138,18 @@ def AllAnimeSolo():
                     f = 0
                     for g in download:
                         if('vip' in str(download[f]) and 'http:' in str(download[f])):
-                            print()
                             print('Link verdadeiro')
                             if(f == 0 or f == 7):
                                 print('muito grande')
                                 print(str(f))
-                                print()
+                                
                             else:
                                 print('efetuando download')
                                 href = download[f].get('href')
                                 #wget.download(href)
-                                Download(href, 1, name, 'SD', str(episodes))
+                                Download(href, 1, name, 'SD', int(resp)-int(episodes)+1)
                         else:
-                            print()
-                            print('falso')
-                            print()
+                            pass
                         f+=1
                     driver.find_element(By.XPATH, '//*[@id="metodosDownloadModal"]/div/div/div[1]/button').click()
                     
