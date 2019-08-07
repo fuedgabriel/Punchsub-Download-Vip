@@ -1,9 +1,24 @@
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import os
 import time
 import re
+try:
+    from bs4 import BeautifulSoup
+except:
+    os.system('pip install bs4')
+    from bs4 import BeautifulSoup
+try:
+    from urllib.request import urlopen
+except:
+    os.system('pip install urlopen urllib')
+    from urllib.request import urlopen
+    import urllib.request
+try:
+    from selenium import webdriver
+    from selenium.webdriver.common.by import By
+except:
+    os.system('pip install selenium')
+
+
 import wget
 #login
 login = ''
@@ -11,12 +26,26 @@ password = ''
 link = 'https://punchsubs.net/buscar-projeto/anime'
 
 #Contadores
+'''
+import wget
 
+print('Beginning file download with wget module')
 
-
+url = 'http://i3.ytimg.com/vi/J---aiyznGQ/mqdefault.jpg'
+wget.download(url, '/Users/scott/Downloads/cat4.jpg')
+'''
 
 driver = webdriver.Chrome()
-
+def Download(Direct, Worker, Name, FullHdSd, Ep):
+    try:
+        urllib.request.urlretrieve(Direct)
+    except:
+        print('Anime download erro: '+ str(Name))
+        print('"uality: '+ str(FullHdSd))
+        print('Episodeo: '+ str(Ep))
+        
+        
+    
 
 
 def Login():
@@ -43,9 +72,9 @@ def AllAnimeSolo():
 
         #nome
         while('"' not in x):
-            x = col[1][11:a]
+            name = col[1][11:a]
             a+=1
-        print('Nome do anime: '+x)
+        print('Nome do anime: '+name)
         
         #numero de episodeos
         resp = re.compile('[0-9]+').findall(col[2])
@@ -55,38 +84,51 @@ def AllAnimeSolo():
 
     
         for Collum in range(20):
-            if('link' in col[Collum]):
-                #pegar link de download, imagem e abrir o link do anime
-                link = 'https://punchsubs.net/'+col[Collum][10:100].replace('"','').replace('\\','')
-                print('Link de download: ' + link)
-                print('Link de Imagem: '+ col[Collum+1][10:1000].replace('"','').replace('\\',''))
-
+            try:
                 
-                #abrir link do anime
-                driver.get('https://punchsubs.net/projeto/2525/aico-incarnation')
-                id = driver.page_source
-                sopa = BeautifulSoup(id, 'html.parser')
-                print()
-                print()
-                print()
-                print()
-                print()
+                if('link' in col[Collum]):
+                    try:
+                    
+                        #pegar link de download, imagem e abrir o link do anime
+                        link = 'https://punchsubs.net/'+col[Collum][10:1000].replace('"','').replace('\\','')
+                        print('Link de download: ' + link)
+                        print('Link de Imagem: '+ col[Collum+1][10:1000].replace('"','').replace('\\',''))
+                        
+                        #abrir link do anime
+                        #https://punchsubs.net/projeto/2539/alice-or-alice-siscon-niisan-to-futago-no-imouto
+                        driver.get(str(link))
+                    except:
+                        print('Erro na captura de link')
+                        print('')
+                    
+                    id = driver.page_source
+                    sopa = BeautifulSoup(id, 'html.parser')
+                    
                 
-                #break
+                    #break
 
-                #capturar link por link
-                img = 0
-                test = sopa.find_all("img", class_='card-img-top rounded screen')
+                    #capturar link por link
+                    episodes = 0
+                    test = sopa.find_all("img", class_='card-img-top rounded screen')
+            except:
+                print()
 
                 for clicks in test:
-                    img+=1
-                    print('link das imagens dos episodeos: '+ str(clicks))
+                    episodes+=1
+                    images = clicks.split(' ')
+                    images = images[7]
+                    print('link das imagens dos episodeos: '+ str(images))
                     print()
                     print()
-                    
-                    driver.find_element(By.XPATH, '//*[@id="cards-episodios"]/ul[1]/li['+str(img)+']/div[1]/img').click()
-                    time.sleep(0.5)
-                    driver.find_element(By.XPATH, '//*[@id="nav-sd-tab"]').click()
+                    try:
+                        
+                        driver.find_element(By.XPATH, '//*[@id="cards-episodios"]/ul[1]/li['+str(episodes)+']/div[1]/img').click()
+                        time.sleep(0.5)
+                        driver.find_element(By.XPATH, '//*[@id="nav-sd-tab"]').click()
+                    except:
+                        print('Erro provavelmente finalizou os download de episódios de um anime.')
+                        print('numeros baixados: '+str(episodes))
+                        AllAnimeSolo()
                     
                     id = driver.page_source
                     sopa = BeautifulSoup(id, 'html.parser')
@@ -103,7 +145,8 @@ def AllAnimeSolo():
                             else:
                                 print('efetuando download')
                                 href = download[f].get('href')
-                                wget.download(href)
+                                #wget.download(href)
+                                Download(href, 1, name, 'SD', str(episodes))
                         else:
                             print()
                             print('falso')
